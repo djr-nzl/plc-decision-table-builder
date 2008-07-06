@@ -9,5 +9,5 @@ And VBA to generate code that can be pasted directly into a Rockwell AB Control 
 
 = Details =
 
-# While the initial release is in excel - I am keen to convert it to Open Office.
-# Its easy enough to add the scripts to generate PLC5 RLL and its next on the list.
+  # While the initial release is in excel - I am keen to convert it to Open Office.
+  # Its easy enough to add the scripts to generate PLC5 RLL and its next on the list.
