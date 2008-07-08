@@ -2,17 +2,20 @@
 
 = Introduction =
 
-Use a spreadsheet to design and test a small simple decision table.
-It uses conditional formatting to highlight various cells.
-And VBA to generate code that can be pasted directly into a Rockwell AB Control Logix PLC a RLL.
+ * Use a spreadsheet to design and test a small and simple decision table.
+ * Use conditional formatting to highlight various cells.
+ * And finally use VBA to generate code, and provide functionality to assist design and test.
+ * And extra finally use VBA to produce logic that can be pasted directly into a Control Logix PLC in RLL.
 
 
 = Details =
 
-  # While the initial release is in excel - I am keen to convert it to Open Office.
-  # Its easy enough to add the scripts to generate PLC5 RLL and its next on the list.
+  * While the initial releases are in excel - I am keen to convert it to Open Office.
+  * It's easy enough to add the scripts to generate (say) PLC5 RLL (its next on the list).
 
-There is only one download - it also contains the source and some cell comments to help get one started - for more information please feel free to contact me.
+= Help =
 
-=== 8 Jul 08 ===
-I have been improving the template by adding a VBA sub that simulates 1 scan of the PLC and updates any inputs to the decision table that are outputs - i.e feedbacks, latches, edge detectors and the like.
+ * There is no help at present aside from a short video showing its use.
+ * I hope to create a better help soon.
+
+ 'djr.nzl'
