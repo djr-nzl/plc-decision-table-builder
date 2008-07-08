@@ -13,3 +13,7 @@ And VBA to generate code that can be pasted directly into a Rockwell AB Control 
   # Its easy enough to add the scripts to generate PLC5 RLL and its next on the list.
 
 There is only one download - it also contains the source and some cell comments to help get one started - for more information please feel free to contact me.
+
+=== 8 Jul 08
+I have been improving the template by adding a VBA sub that simulates 1 scan of the PLC and updates any inputs to the decision table that are outputs - i.e feedbacks, latches, edge detectors and the like.
+
