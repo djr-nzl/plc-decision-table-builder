@@ -21,8 +21,12 @@
 
 == Blank Template ==
 
+Start with a blank template.
+
 [http://posterous.com/getfile/files.posterous.com/raygun/fyjjlqvLKqFBesb4NqexBTCOJDYkMvJhThomFujN9zTJ25OHOXVwmFmyqwGc/moz-screenshot-7.jpg]
 
 == Auto/Manual Motor Control Station ==
 
-[
+Fill out the Inputs and Outputs list - Define the rules - test by simulating a 1 or 0 for each input as required.
+
+[http://lh5.ggpht.com/djr.nzl/SIRN3nDmVPI/AAAAAAAAABQ/AAz_IJH49EA/DT%20-%20Manual%20Auto%20Motor%20Ctrl%20Station.jpg]
