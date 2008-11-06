@@ -70,11 +70,11 @@ module PLCDTbl::Views
 				
 				table(:id=> 'top_menu', :class=> 'menu'){
 					tr{
-						td{a('Select Table',:href=>'javascript:do_it();')}
-						td{a('Save Table',:href=>'javascript:do_it();')}
-						td{a('Stop Scan',:href=>'javascript:do_it();')}
+						td{a('Select Table',:href=>'javascript:fix_it();')}
+						td{a('Save Table',:href=>'javascript:fix_it();')}
+						td{a('Stop Scan',:href=>'javascript:fix_it();')}
 						td{a('Details',:href=>'', :OnClick=> 'JavaScript:Show_Details();return false;')}
-						td{a('Generate Code',:href=>'javascript:do_it();')}
+						td{a('Generate Code',:href=>'javascript:fix_it();')}
 					}
 				}
 				
@@ -87,15 +87,16 @@ module PLCDTbl::Views
 						th(:colspan=>2){'Decision Table'}
 						th(:colspan=>2){
 							'Rules ' +
-							a('Insert',:href=>'', :class=>'tbl_menu', :OnClick=>'javascript:Insert_Rule(this);return false;') +
-							a('Remove',:href=>'', :class=>'tbl_menu', :OnClick=>'javascript:Remove_Rule(this);return false;')
+							a('Insert',:href=>'', :class=>'tbl_menu', :OnClick=>'javascript:Add_Rule();return false;') +
+							a('Remove!',:href=>'', :class=>'tbl_menu', :OnClick=>'javascript:Remove_Rule();return false;') +
+							a('Renumber!',:href=>'', :class=>'tbl_menu', :OnClick=>'javascript:Renumber_Rules();return false;')
 						}
 					}
 					tr{
 						th(:colspan=>2){
 							'Inputs ' +
-							a('Insert',:href=>'', :class=>'tbl_menu', :OnClick=>'javascript:Insert_Input(this);return false;') +
-							a('Remove',:href=>'', :class=>'tbl_menu', :OnClick=>'javascript:Remove_Input(this);return false;')
+							a('Insert',:href=>'', :class=>'tbl_menu', :OnClick=>'javascript:Add_Input();return false;') +
+							a('Remove!',:href=>'', :class=>'tbl_menu', :OnClick=>'javascript:Remove_Input();return false;')
 						}
 						td{_rules}
 					}
@@ -107,8 +108,8 @@ module PLCDTbl::Views
 					tr{
 						th(:colspan=>2){
 							'Outputs ' +
-							a('Insert',:href=>'', :class=>'tbl_menu', :OnClick=>'javascript:Insert_Output(this);return false;') +
-							a('Remove',:href=>'', :class=>'tbl_menu', :OnClick=>'javascript:Remove_Output(this);return false;')
+							a('Insert',:href=>'', :class=>'tbl_menu', :OnClick=>'javascript:Add_Output();return false;') +
+							a('Remove!',:href=>'', :class=>'tbl_menu', :OnClick=>'javascript:Remove_Output();return false;')
 						}
 						td{_input_rules_state}
 					}
@@ -131,69 +132,42 @@ module PLCDTbl::Views
 	end
 	
 	def _rules
-		table(:id=>'rule_id', :class => 'F2bit'){
-			tr{(0..7).collect{|i| td{i} }}
-		}
+		table(:id=>'rule_id', :class=>'Fcell'){ tr{ td{'0'} } }
 	end
 	
 	def _input_list
-		table(:id=>'input_list', :class => 'list'){
-			[	'Automatic',
-				'Normal Supply Available',
-				'Backup Supply Available',
-				'Normal Supply CB Closed',
-				'Backup Supply CB Closed'
-			].collect{|i| tr{ td{i}} }
-		}
+		table(:id=>'input_list', :class => 'Flist'){ tr{ td{'Automatic'} } }
 	end
 
 	def _input_state
-	table(:id=>'input_state', :class=> 'F2bit'){
-			[	0, 0, 0, 0, 0 ].collect{|i| tr{ td(:class=> 'dt_input'){i}} }
-		}
+	table(:id=>'input_state', :class=> 'Fcell'){ tr{ td{0} } }
 	end
 	
 	def _input_rules
-		table(:id=>'input_rules', :class=>'F3bit'){
-			tr{td{'1'};td{'1'};td{'1'};td{'1'};td{' '};td{' '};td{' '};td{' '}}
-			tr{td{'1'};td{'0'};td{'0'};td{'1'};td{' '};td{' '};td{' '};td{' '}}
-			tr{td{' '};td{'1'};td{'1'};td{' '};td{' '};td{' '};td{' '};td{' '}}
-			tr{td{'0'};td{'1'};td{'0'};td{' '};td{' '};td{' '};td{' '};td{' '}}
-			tr{td{'0'};td{' '};td{'0'};td{'1'};td{' '};td{' '};td{' '};td{' '}}
-		}
+		table(:id=>'input_rules', :class=>'Fcell'){ tr{td{'1'}} }
 	end
 	
 	def _input_rules_state
-		table(:id=>'input_rules_state' , :class=> 'FSbit'){
-			tr{td{' '};td{' '};td{' '};td{' '};td{' '};td{' '};td{' '};td{' '}}
-		}
+		table(:id=>'input_rules_state' , :class=> 'Fcell'){ tr{td{' '}} }
 	end
 	
 	def _output_rules
-		table(:id=> 'output_rules', :class=>'F3bit'){
-			tr{td{'1'};td{' '};td{' '};td{' '};td{' '};td{' '};td{' '};td{' '}}
-			tr{td{' '};td{'1'};td{' '};td{' '};td{' '};td{' '};td{' '};td{' '}}
-			tr{td{' '};td{' '};td{'1'};td{' '};td{' '};td{' '};td{' '};td{' '}}
-			tr{td{' '};td{' '};td{' '};td{'1'};td{' '};td{' '};td{' '};td{' '}}
-		}
+		table(:id=> 'output_rules', :class=>'Fcell'){ tr{ td{'0'} } }
 	end
 
 	def _output_state
-	table(:id=>'output_state',:class => 'FSbit'){
-			[	0, 0, 0, 0 ].collect{|i| tr{ td(:class=> 'dt_output'){i}} }
-		}
+	table(:id=>'output_state',:class => 'Fcell'){ tr{ td(:class=> 'Fcell'){''} } }
 	end
 	
 	def _output_list
-		table(:id=>'output_list', :class => 'list'){
-			[	'Normal Supply CB Close Command',
-				'Normal Supply CB Trip Command',
-				'Backup Supply CB Close Command',
-				'Backup Supply CB Trip Command'
-			].collect{|i| tr{ td{i}} }
-		}
+		table(:id=>'output_list', :class => 'Flist'){ tr{ td{'Automatic'}} }
 	end
 	
+end
+
+module PLCDTbl::Helpers
+	def css_main
+	end
 end
 
 def PLCDTbl.create ; PLCDTbl::Models.create_schema ; puts '==> PLCDTbl (PLC Decision Table) loaded' ;end
