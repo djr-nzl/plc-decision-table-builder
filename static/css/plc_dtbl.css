@@ -28,13 +28,6 @@ th{
 	font-weight: bold;
 }
 
-a.tbl_menu{font-size: 0.7em;}
-
-.list tr td{width: 200px; height: 22px;}
-.F2bit tr td{ width: 18px; height: 22px; text-align: center;}
-.F3bit tr td{ width: 18px; height: 22px; text-align: center;}
-.FSbit tr td{ width: 18px; height: 22px; text-align: center;}
-
 #detail_div{
 	border: solid 1px blue;
 	display: none;
@@ -42,3 +35,23 @@ a.tbl_menu{font-size: 0.7em;}
 	padding: 15px;
 	margin: 0 0 15 0;
 }
+
+a.tbl_menu{font-size: 0.7em;}
+.cursorP {cursor: pointer;}
+.cursorA {cursor: auto;}
+.Flist tr td{width: 200px; height: 22px;}
+.Fcell tr td{ width: 18px; height: 22px; text-align: center;}
+.F2bit tr td{ width: 18px; height: 22px; text-align: center;}
+.F3bit tr td{ width: 18px; height: 22px; text-align: center;}
+.FSbit tr td{ width: 18px; height: 22px; text-align: center;}
+.FPLC_On{background-color: #0F0;}
+.FPLC_Off{background-color: #AAA;}
+.FPLC_Clr{background-color: #DDF;}
+.FRule_On{background-color: #CFC;}
+.FRule_Off{background-color: #AAA;}
+.FRule_Clr{background-color: #DDF;}
+.table_dd_drag {background-color: red;}
+.table_dd_drop {background-color: blue;}
+.table_dd_point {cursor: pointer;}
+.table_dd_rows {cursor: ns-resize;}
+.table_dd_cols {cursor: ew-resize;}

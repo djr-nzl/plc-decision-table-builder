@@ -1,5 +1,11 @@
 PLC Decision Table Design and Test Tool.
-Version 2 - 6 October 2009
+
+h3. Version 3 - 6 November 2009
+
+# Added drag and drop
+# Tidied the JS
+
+h3. Version 2 - 6 October 2009
 
 Alpha Centrus release.
 
@@ -31,4 +37,12 @@ You may need to install a few other gems - I will update this list soon.
 
 More to follow.
 
+The 3 files making up this app are free, they are yours already.
+# PLCDTbl.rb
+# plc_dtbl.css
+# plc_dtbl.js
+
+a 4th file, a dependency, jquery.js has its own licensce - please read it - its in the file.
+
 Raygun
+djr.nzl@gmail.com
