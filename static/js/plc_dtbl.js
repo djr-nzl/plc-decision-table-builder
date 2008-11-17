@@ -1,10 +1,11 @@
 // JavaScript Helper for my Ruby, Camping, PLC Decision Table Design and Test Tool.
 // Version 2 - 10 Sep 08 - iinitial release - needs lots to finish.
 // Version 3 - 30 Oct 08 - added drag and drop and tidied and reworked most the js.
+// Version 4 - 14 Nov 08 - added ajax post for table saving and code generation.
 // djr.nzl@gmail.com
 // This code is free - it's yours already.
 
-/*
+/* Notes
 Notes: on Revision 2
 
 Version 2 is a conversion of the concepts of the 1st version, a Excel spreadsheet to a web
@@ -55,6 +56,7 @@ var BT = '1'; // Boolean True
 var BF = '0'; // Boolean False
 var BN = ' '; // Boolan Null (for don't care)
 var LR = 0; // The last rule - used to auto allocate rule numbers
+var csep = '/' // Bit seperator for code generation
 
 $(document).ready(function () {
  App_Initialize();
@@ -62,13 +64,15 @@ $(document).ready(function () {
 
 function App_Initialize(){
 	App_Reset();
-	setInterval('Scanner();',1000);
-	LR = $('#rule_id').find('td').length - 1;
+	$('title').text('DT ' + $('#table_title').text());
+	var ScanTimer = setInterval( Scanner, 1000);
+	LR = $( '#rule_id').find('td').length - 1;
 }
 
+// =========================================================================
 // removes all events and then sets them up again
 // used once on loading
-// used after appending or removing a column or row
+// then after appending or removing a column or row
 function App_Reset(){
 
 	// i want to remove all events - so i can added them all again.
@@ -94,11 +98,13 @@ function App_Reset(){
 	
 }
 
-// My reminders
+// =========================================================================
+// Todo's
 function fix_it(){
 	alert('Sorry, some of these buttons are "to do" (server comms etc).\nTry the Insert and Remove links.\nTry toggling the valves in inputs or rules tables.');
 }
 
+// =========================================================================
 // Dynamics - logic solver.
 // Use the inputs table column to solve the input rules.
 // Then the result of the inputs rules to solve the output rules
@@ -106,7 +112,7 @@ function fix_it(){
 // Then apply the colouring (to rules and outputs using css classes)
 
 function Scanner(){
-	Scan_Cnt ++; $('#scan_count').text('Scan count: ' + Scan_Cnt);
+	Scan_Cnt ++; $('#scan_count').text(String(Scan_Cnt));
 	Scanner_Solve_Table();
 }
 
@@ -138,9 +144,9 @@ function Scanner_Solve_Table(){
 	Color_In( $('#input_state').find('td') );
 	
 	// Color in the inputs rules table next - using the format string returned when that part was solved
-	Color_In_Using_Format_Str( '#input_rules' , irules_format_str );
-	Color_In_Using_Format_Str( '#output_rules' , orules_format_str );
-	Color_In( $('#input_rules_state, #output_state').find('td') );
+	Color_In_Using_Format_Str( '#input_rules', irules_format_str);
+	Color_In_Using_Format_Str( '#output_rules', orules_format_str);
+	Color_In( $('#input_rules_state, #output_state').find('td'));
 }
 
 function Scanner_Solve_Input_Rules(input_str, rules_cnt, rules_str){
@@ -193,15 +199,14 @@ function Scanner_Solve_Output_Rules( input_str, input_len, rules_str ){
 }
 
 function Scanner_Feedback_Inputs(outputs_str){
-	inputs = [];
-	outputs = [];
+	var inputs = [];
+	var outputs = [];
 	$('#input_list').find('td').each(function(i){inputs[i] = $(this).text()});
 	$('#output_list').find('td').each(function(i){outputs[i] = $(this).text()});
-	for (ox = 0 ; ox <= outputs.length ; ox ++){
-		for (ix = 0 ; ix <= inputs.length ; ix ++){
+	for (var ox = 0 ; ox < outputs.length ; ox ++){
+		for (var ix = 0 ; ix < inputs.length ; ix ++){
 			if ( outputs[ox] != BN && inputs[ix] != BN && outputs[ox] == inputs[ix] ){
-				ip = $('#input_state').find('td:eq('+ix+')');
-				ip.text(outputs_str[ox]);
+				$('#input_state').find('td:eq('+ix+')').text(outputs_str[ox]);
 			}
 		}
 	}
@@ -219,6 +224,7 @@ function Scanner_Update_ORules(state_str){
 	});
 }
 
+// =========================================================================
 // Clickie things
 
 function Initialize_Toggle_2Bit(query){
@@ -260,7 +266,7 @@ function Initialize_List_Click_Edit(query){
 	return false;
 }
 
-
+// =========================================================================
 // Colouring in (a paint by numbers variation)
 // when called with an array of elements
 // iterates through them coloring then according to their text value.
@@ -283,11 +289,13 @@ function Color_In(query_str){
 	});
 }
 
+// =========================================================================
 // Use this to color in the inputs
 // because sometimes 0 is to be indicated as true (green background) to help visually sole the rules.
 // this formatiing can be changed to suit different ways of looking at the rules.
 // for now I use the carry from the rule solver to determine color.
 function Color_In_Using_Format_Str( query , format_str ){
+	var fmt = '';
 	$(query).find('td').each(function(idx){
 			var T = $(this);
 			fmt = format_str[idx];
@@ -320,6 +328,7 @@ function Auto_Rule_Number(){
 	$('#rule_id').find('td:last').text(''+LR);
 }
 
+// =========================================================================
 // Append and Remove  Rows and Columns
 
 function Add_Input(){
@@ -367,6 +376,7 @@ function Remove_Rule(idx){
 	App_Reset();
 }
 
+// =========================================================================
 // Append and Remove Row and Column Generics
 
 function Append_Row(table_id){
@@ -395,26 +405,218 @@ function Remove_Column(table_id){
 	}
 }
 
+// =========================================================================
+// Hide and show details div
 
-// Handle the details div
-
-function  Show_Details(){
-	$('#main_title_in').attr({value: $('#main_title').text()});
-	$('#sub_title_in').attr({value: $('#sub_title').text()});
-	$('#top_menu').hide('slow')
-	$('#sub_title').hide('slow')
-	$('#detail_div').show('slow')
+function  Detail_Show(){
+	$('#edit_title').attr({value: $('#table_title').text()});
+	$('#menus').slideUp('fast')
+	$('#tables').slideUp('fast')
+	$('#details').slideDown('slow')
 }
 
-function  Hide_Details(){
-	$('#detail_div').hide('slow');
-	$('#top_menu').show('slow')
-	$('#sub_title').show('slow')
-	$('#main_title').text($('#main_title_in').attr('value'));
-	$('#sub_title').text($('#sub_title_in').attr('value'));
+function  Detail_Hide(){
+	$('#details').slideUp('fast')
+	$('#menus').slideDown('slow')
+	$('#tables').slideDown('slow')
+	$('#table_title').text($('#edit_title').attr('value'));
+	$('title').text('DT ' + $('#table_title').text());
+	$('#logic1').text('');
+	$('#logic2').text('');
+	$('#logic3').text('');
+	$('#logic4').text('');
+	$('#logic5').text('');
+	$('#logic6').text('');
 }
 
+// =========================================================================
+// SAVING to the SERVER - a POST no less
+// collect the various elements that make up the table
+// and post via ajax, the server returns the id and version like 'id,version'
+function SaveTable(){
+	var id = Number($('#table_id').text());
+	var r_list = [];
+	var i_list = [];
+	var o_list = [];
+	$('#rule_id').find('td').each(function(i){r_list[i] = $(this).text()});
+	$('#input_list').find('tr').each(function(i){i_list[i] = $(this).text()});
+	$('#output_list').find('tr').each(function(i){o_list[i] = $(this).text()});
+	var post_data = {
+		table_id: id,
+		title: $('#table_title').text(),
+		notes: $('textarea').val(),
+		input_list: i_list.join(),
+		input_state: $('#input_state').text(),
+		rule_list: r_list.join(),
+		input_rules: $('#input_rules').text(),
+		output_rules: $('#output_rules').text(),
+		output_list: o_list.join()
+	}
+	$.post(	'/PLCDTbl/table/' + id ,
+		post_data ,
+		function(rtn_val){
+			var arr = rtn_val.split(',');
+			$('#table_id').text(String(arr[0]));
+			$('#table_version').text(String(arr[1]));
+			$('#notify').text('Saved, Ver: ' + arr[1]);
+			$('#notify').show('fast');
+			$('#notify').hide(5000);
+		}
+	);
+}
 
+function SaveAsNewTable(){
+	$('#table_id').text('0');
+	SaveTable();
+}
+
+// =========================================================================
+// PLC Relay Ladedr Logic Generation - PLC 5 / SLC 500 / MicroLogix / CompactLogix
+
+function Generate_PLC_RLL(){
+	// get all the data from the tables
+	// this data is a string of 1's, 0's and spaces ' ' 
+	var input_cnt = $('#input_list').find('td').length;
+	var output_cnt = $('#output_list').find('td').length;
+	var rule_cnt = $('#rule_id').find('td').length;
+	var irules_str = $('#input_rules').text();
+	var orules_str = $('#output_rules').text();
+	var i_prefix = $('#code_i_prefix').val();
+	var r_prefix = $('#code_r_prefix').val();
+	var e_prefix = $('#code_e_prefix').val();
+	var o_prefix = $('#code_o_prefix').val();
+	// Need
+	// Inputs word - eg N10:0 -> Input 0 is N10:0/0
+	// Rules word - eg N10:1 -> Rule 0 is N10:1/0
+	// Rule enable word - eg N10:2 -> Rule 0 Enable is N10:2/0
+	// Outputs word - eg N10:3 -> Output 0 is N10:3/0
+	
+	// generate the inputs mapping
+	var input_rll = Generate_PLC_Inputs( i_prefix, input_cnt);
+	if(input_rll.length > 1){
+		$('#logic1').text( 'SOR BST ' + input_rll.join(' NXB ') + ' BND EOR ');
+	}else{
+		$('#logic1').text( 'SOR ' + input_rll[0] + ' EOR ');
+	}
+	
+	// generate the input rules mapping
+	var rule_rll = Generate_PLC_RuleDecode( i_prefix, r_prefix, input_cnt, rule_cnt, irules_str);
+	if(rule_rll.length > 1){
+		$('#logic2').text( 'SOR BST ' + rule_rll.join(' NXB ') + ' BND EOR ');
+	}else{
+		$('#logic2').text( 'SOR ' + rule_rll[0] + ' EOR ');
+	}
+	
+	// generate the output rules mapping
+	var output_rll = Generate_PLC_Outputs( r_prefix, e_prefix, o_prefix, rule_cnt, output_cnt, orules_str)
+	if(output_rll.length > 1){
+		$('#logic3').text( 'SOR BST ' + output_rll.join(' NXB ') + ' BND EOR ');
+	}else{
+		$('#logic3').text( 'SOR ' + output_rll[0] + ' EOR ');
+	}
+	
+	// last 2 rungs
+	$('#logic4').text( $('#logic2').text() + ' ' + $('#logic3').text());
+
+	// combined rungs
+	$('#logic5').text( $('#logic1').text() + ' ' + $('#logic2').text() + ' ' + $('#logic3').text());
+
+	// comments
+	$('#logic6').html( Generate_PLC_Comments());
+	
+}
+
+function Generate_PLC_Inputs( prefix, input_cnt){
+	var rv = [];
+	for( var n = 0; n < input_cnt; n++){
+		rv[n] = 'XIC ' + prefix + csep + n + ' OTE ' + prefix + csep + n;
+	}
+	return rv;
+}
+
+function Generate_PLC_RuleDecode(i_prefix, r_prefix, i_cnt, r_cnt, rules_str){
+	var rv = [];
+	var rc;
+	var offset;
+	for( var r_id = 0; r_id < r_cnt; r_id++){
+		rc = []; // Reset the rule collector
+		for(var i_id = 0; i_id < i_cnt; i_id++){
+			offset = r_id + (i_id * r_cnt)
+			if(rules_str[offset] == BT){
+				rc[i_id] = ' XIC ' + i_prefix + csep + i_id;
+			}else if(rules_str[offset] == BF){
+				rc[i_id] = ' XIO ' + i_prefix + csep + i_id;
+			}
+		}
+		rv[r_id] = rc.join(' ') + ' OTE ' + r_prefix + csep + r_id;
+	}
+	return rv;
+}
+
+function Generate_PLC_Outputs( r_prefix, e_prefix, o_prefix, r_cnt, o_cnt, rules_str){
+	var rv = [];
+	var rc;
+	var offset;
+	for( var o_id = 0; o_id < o_cnt; o_id++){
+		rc = []; // Reset the rule collector
+		rc_pt = 0; // And its pointer
+		for(var r_id = 0; r_id < r_cnt; r_id++){
+			offset = r_id + ( o_id * r_cnt )
+			if(rules_str[offset] == BT){
+				rc[rc_pt] = ' XIC ' + r_prefix + csep + r_id + ' XIC ' + e_prefix + csep + r_id;
+				rc_pt ++ ;
+			}else if(rules_str[offset] == BF){
+				rc[rc_pt] = ' XIO ' + r_prefix + csep + r_id + ' XIC ' + e_prefix + csep + r_id;
+				rc_pt ++ ;
+			}
+		}
+		if( rc.length > 1){
+			rv[o_id] = 'BST' + rc.join(' NXB ') + ' BND OTE ' + o_prefix + csep + o_id ;
+		}else{
+			rv[o_id] = rc[0] + ' OTE ' + o_prefix + csep + o_id ;
+		}
+	}
+	return rv;
+}
+
+function Generate_PLC_Comments(){
+	var rv = [];
+	var c_prefix = 'DT'
+	var i_prefix = $('#code_i_prefix').val();
+	var r_prefix = $('#code_r_prefix').val();
+	var e_prefix = $('#code_e_prefix').val();
+	var o_prefix = $('#code_o_prefix').val();
+	var r_count = $('#rule_id').find('td').length;
+	rv[0] = Generate_PLC_IO_Comments( '#input_list', i_prefix, c_prefix + ' INPUT' );
+	rv[1] = Generate_PLC_Rule_Comments( r_count, r_prefix, e_prefix, c_prefix);
+	rv[2] = Generate_PLC_IO_Comments( '#output_list', o_prefix, c_prefix + ' OUTPUT');
+	return rv.join('<br>\n');
+}
+
+function Generate_PLC_IO_Comments( elm_id, base_address, comment_prefix){
+	var rv = [];
+	var ba = base_address;
+	var cp = comment_prefix;
+	$(elm_id).find('td').each(function(idx){
+		rv[idx] = ba + '/' + idx + ',,,' + cp + ' ' + idx + ',' + $(this).text();
+	});
+	return rv.join('<br>\n');
+}
+
+function Generate_PLC_Rule_Comments( elm_cnt, base_address, enable_address, comment_prefix){
+	var rv = [];
+	var ba = base_address;
+	var en = enable_address;
+	var cp = comment_prefix;
+	for( var pt = 0; pt < elm_cnt; pt++){
+		var a = ba + '/' + pt + ',,,' + cp + ' RULE ' + pt;
+		var b = en + '/' + pt + ',,,' + cp + ' RULE ' + pt + ', Enable Sw';
+		rv[pt] = a + '<br>\n' + b;
+	}
+	return rv.join('<br>\n');
+}
+
+// =========================================================================
 /*	=== Stupid table row and column drag and dropper using jQuery ===
 		Generic functions .
 		Drags across mulipy tables (not from one to the other, common rows or columns).
@@ -536,67 +738,3 @@ function table_dragdrop(dragable_elements, event_handler_fun, dragging_rows ){
 	});
 }
 
-
-//=======================================================
-// get the index
-// var index = $("div").index(this);
-/* Stuff that may be handy
-
-// $('td').bind("mouseenter mouseleave", function(e){ $(this).toggleClass("IC"); });
-
-
- $('.toggle_3bit').hover(function () {
-		// $(this).css({ backgroundColor:"yellow", fontWeight:"bolder" });
-	// }, function () {
-		// var cssObj = {
-			// backgroundColor: "#ddd",
-			// fontWeight: "",
-			// color: "rgb(0,40,244)"
-		// }
-		// $(this).css(cssObj);
-// });
-
-// ajax
-function LoadPage( id ){ 	// -> '/PServ/page/'
-		$.get('/PServ/page/' + id , MapToPage ) ;
-		$('#files').hide('slow') ;
-}
-
-function SavePage(){ 			// -> '/PServ/page/'
-		var id = $('#page_id').text() ;
-		var post_data = {
-			page_id: id,
-			page_title: $('#page_title').attr('value'),
-			page_tags: $('#page_tags').attr('value'),
-			page_text: ContentIs()
-		}
-		$.post(	'/PServ/page/' + id ,
-								post_data,
-								function(){ ToggleMenuBar(); }
-		) ;
-}
-
-function GetPageList(){  	// -> '/PServ/fck_list'
-	$('#page_list_div').load('/PServ/fck_list');
-}
-
-function UpDateList(){ 		// -> '/PServ/jlist'
-	$.getJSON( '/PServ/jlist' ,
-		function(data){
-			alert(data);
-		}
-	);
-}
-
-// mapping
-function MapToPage(data){
-		var d = data.split('***') ;
-		$('#page_id').text( d[0] ) ;
-		$('#page_ver').text( d[1] ) ;
-		$('#page_title').attr( {value: d[2]} ) ;
-		$('#page_tags').attr( {value: d[3]} ) ;
-		ContentSet(d[4]) ;
-		$("title").text('FCK: ' + d[2]) ;
-}
-
-*/

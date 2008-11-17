@@ -1,11 +1,33 @@
 PLC Decision Table Design and Test Tool.
 
-h3. Version 3 - 6 November 2009
+h3. Version 4 - Nov 17 2008
+
+Have worked this up to the point of being usable, for my current needs anyway.
+I had a job that looked like a candidate for some decision tables.
+Using this tool I have worked them up, pasted the generated RLL into a PLC and tested it and will put it in the production PLC shortly.
+I have also (to my local workstation) imported 4 previous version that were developed in the original spreadsheet version. All good.
+
+There are still some bugs that I am working on.
+And more to add. I hope to use this tool more often in my work, because its easy to design and test some controls and then to send the design to others for testing, all they need is a browser.
+
+There is a major bug (I had better fix that now) - it does not run in IE.
+
+I think this problem is related to the timerInterval() JS command or whatever it is, and that IE does not support it, its all very odd, there is a timer event that IE does - I will try that. I developed, tested and used Google Chrome, and checked it in FireFox?, it sizes a little differently but worked ok. This is the biggest JS app I have done so am learning new things.
+
+What's new in Version 4
+
+* Added code generation, for AB PLC5 SLC500 only.
+* Generate PLC comments based on Input and Output text.
+* Got a camping server up and running that serves up the decision table pages and accepts post's for saving, the posts are sent by ajax.
+* Tidied up the structure of the html, js and ruby.
+* Added to the downloads a saved version of a new decision table as served by the camping server.
+
+h3. Version 3 - 6 November 2008
 
 # Added drag and drop
 # Tidied the JS
 
-h3. Version 2 - 6 October 2009
+h3. Version 2 - 6 October 2008
 
 Alpha Centrus release.
 

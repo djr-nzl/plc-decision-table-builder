@@ -2,7 +2,7 @@
 		Version 2 - 5 Oct 2008 - djr.nzl@gmail.com - Released to the public domain 1
 */
 
-body{ font-family: Tahoma; line-height: 150%; margin-left: 25; margin-right: 25; background-color: #DDF;}
+body{ font-family: Tahoma; line-height: 120%; margin-left: 25; margin-right: 25; background-color: #DDF;}
 
 a,a:visited {
 	padding: 0px 4px 0px 4px;
@@ -27,16 +27,23 @@ th{
 	background: #BBF;
 	font-weight: bold;
 }
-
-#detail_div{
-	border: solid 1px blue;
-	display: none;
-	width: 420;
-	padding: 15px;
-	margin: 0 0 15 0;
+#notify{	position: absolute;
+					top: 24px;
+					left: 0px;
+					height: 14px;
+					width: 100px;
+					background: #CCF;
+					border: solid #88F 1px;
+					font-size: 0.7em;
+					line-height: 100%;
 }
 
 a.tbl_menu{font-size: 0.7em;}
+.size1{font-size: 0.95em}
+.size2{font-size: 0.9em}
+.size3{font-size: 0.85em}
+.size4{font-size: 0.8em}
+.size5{font-size: 0.7em}
 .cursorP {cursor: pointer;}
 .cursorA {cursor: auto;}
 .Flist tr td{width: 200px; height: 22px;}
